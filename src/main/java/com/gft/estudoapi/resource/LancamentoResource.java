@@ -6,6 +6,7 @@ import com.gft.estudoapi.repository.LancamentoRepository;
 import com.gft.estudoapi.repository.PessoaRepository;
 import com.gft.estudoapi.repository.filter.LancamentoFilter;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,8 @@ public class LancamentoResource {
 
     @ApiOperation("Buscar lancamento")
     @GetMapping("/{codigo}")
+    @ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true,
+            allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
     public ResponseEntity<Lancamento> buscarPeloCodigo(@ApiParam(value = "ID", example = "1") @PathVariable Long codigo) {
         Lancamento lancamento = lancamentoRepository.findById(codigo).orElse(null);
         return lancamento != null ? ResponseEntity.ok(lancamento) : ResponseEntity.notFound().build();
@@ -48,12 +51,16 @@ public class LancamentoResource {
 
     @ApiOperation("Listar lancamentos")
     @GetMapping
+    @ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true,
+            allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
     public Page<Lancamento> pesquisar(LancamentoFilter lancamentoFilter, Pageable pageable) {
         return lancamentoRepository.filtrar(lancamentoFilter, pageable);
     }
 
     @ApiOperation("Criar lancamento")
     @PostMapping
+    @ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true,
+            allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
     public ResponseEntity<Lancamento> criar(@ApiParam(name = "corpo", value = "Representação de um novo lançamento") @Validated @RequestBody Lancamento lancamento, HttpServletResponse response) {
         Pessoa pessoa = pessoaRepository.getOne(lancamento.getPessoa().getCodigo());
 
@@ -85,6 +92,8 @@ public class LancamentoResource {
     @ApiOperation("Deletar lancamento")
     @DeleteMapping("/{codigo}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true,
+            allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
     public void deletarPeloCodigo(@ApiParam(value = "ID", example = "1") @PathVariable Long codigo) {
         Lancamento lancamentoDeletado = lancamentoRepository.getOne(codigo);
         lancamentoRepository.delete(lancamentoDeletado);

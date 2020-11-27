@@ -4,6 +4,7 @@ import com.gft.estudoapi.model.Categoria;
 import com.gft.estudoapi.model.Pessoa;
 import com.gft.estudoapi.repository.PessoaRepository;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.BeanUtils;
@@ -29,6 +30,8 @@ public class PessoaResource {
 
     @ApiOperation("Criar uma pessoa")
     @PostMapping
+    @ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true,
+            allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
     public ResponseEntity<Pessoa> criar(@ApiParam(name = "corpo", value = "Representação de uma nova pessoa") @Validated @RequestBody Pessoa pessoa, HttpServletResponse httpServletResponse){
         Pessoa pessoaSalva = pessoaRepository.save(pessoa);
 
@@ -41,6 +44,8 @@ public class PessoaResource {
 
     @ApiOperation("Buscar uma pessoa")
     @GetMapping("/{codigo}")
+    @ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true,
+            allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
     public ResponseEntity<Pessoa> buscarPeloCodigo(@ApiParam(value = "ID", example = "1") @PathVariable Long codigo) {
         Pessoa pessoa = pessoaRepository.findById(codigo).orElse(null);
         return pessoa != null ? ResponseEntity.ok(pessoa) : ResponseEntity.notFound().build();
@@ -55,6 +60,8 @@ public class PessoaResource {
     @ApiOperation("Deletar uma pessoa")
     @DeleteMapping("/{codigo}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true,
+            allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
     public void deletarPeloCodigo(@ApiParam(value = "ID", example = "1") @PathVariable Long codigo) {
         Pessoa pessoaDeletada = pessoaRepository.getOne(codigo);
         pessoaRepository.delete(pessoaDeletada);
@@ -62,6 +69,8 @@ public class PessoaResource {
 
     @ApiOperation("Atualizar uma pessoa")
     @PutMapping("/{codigo}")
+    @ApiImplicitParam(name = "Authorization", value = "Bearer Token", required = true,
+            allowEmptyValue = false, paramType = "header", example = "Bearer access_token")
     public ResponseEntity<Pessoa> atualizar(@ApiParam(value = "ID", example = "1") @PathVariable Long codigo, @ApiParam(name = "corpo", value = "Representação de uma nova pessoa") @Validated @RequestBody Pessoa pessoa) {
         Pessoa pessoaSalva = pessoaRepository.getOne(codigo);
         if (pessoaSalva == null) {
