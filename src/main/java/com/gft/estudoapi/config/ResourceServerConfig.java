@@ -1,5 +1,6 @@
 package com.gft.estudoapi.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -48,12 +49,9 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .csrf().disable();
     }
 
-    @Bean
-    public UserDetailsService userDetailsService() {
-        User.UserBuilder builder = User.withDefaultPasswordEncoder();
-        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-        manager.createUser(builder.username("admin").password("admin").roles("ROLE").build());
-        return manager;
+    @Autowired
+    public void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.inMemoryAuthentication().withUser("admin").password("admin").roles("ROLE");
     }
 }
 
